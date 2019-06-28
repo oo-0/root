@@ -336,6 +336,120 @@ void TCpu<AFloat>::ConvLayerForward(std::vector<TCpuMatrix<AFloat>> & output,
    TCpuMatrix<AFloat>::GetThreadExecutor().Foreach(f, ROOT::TSeqI(input.size()));
 }
 
+template <typename AFloat>
+TCpuMatrix<AFloat> TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights, int rows, int cols){
+  TCpuMatrix<AFloat> modifiedWeightMatrix(rows,cols);
+  TCpuMatrix<AFloat> columnarWeightMatrix = GenerateColumnarMatrix(weights);
+  size_t padRow = 0;
+  for(size_t i = 0 ; i < cols; i++){
+    size_t j = 0;
+    while(j < rows){
+      size_t count = 0 ;
+      for(size_t k = 0; k < padRow; k++){
+        modifiedWeightMatrix(k,i) = 0 ;
+        j++;
+      }
+      
+      for(size_t k = 0 ; k < columnarWeightMatrix.GetNrows() && rows>k;k++){
+        
+        if(count<weights.GetNcols()){
+          modifiedWeightMatrix(j,i) = columnarWeightMatrix(k,1);  
+        }
+        else{
+          modifiedWeightMatrix(j,i) = 0;
+        }
+        j++;
+        count = (count+1)%weights.GetNcols();
+      }
+      
+      for(size_t k = j; k < rows; k++)
+      {
+        modifiedWeightMatrix(j,i) = 0;
+        j++;
+      }
+      padRow++;
+
+    } 
+  }
+  return modifiedWeightMatrix;
+}
+
+template <typename AFloat>
+TCpuMatrix<AFloat> TCpu<AFloat>::GenerateColumnarMatrix(TCpuMatrix<AFloat> input){
+  TCpuMatrix<AFloat> inputColumnar(input.GetNrows()*input.GetNrows(),1);
+  for(size_t i = 0 ; i < input.GetNrows(); i++){
+    for(size_t j = 0 ; j < input.GetNcols(); j++){
+      inputColumnar(i*input.GetNrows()+j,1) = input(i,j);
+    }
+  }
+  return inputColumnar;
+}
+
+//____________________________________________________________________________
+template <typename AFloat>
+void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & output,
+                                    std::vector<TCpuMatrix<AFloat>> & derivatives,
+                                    const std::vector<TCpuMatrix<AFloat>> &input,
+                                    const TCpuMatrix<AFloat> &weights, const TCpuMatrix<AFloat> & biases,
+                                    const DNN::CNN::TConvParams & params, EActivationFunction activFunc,
+                                    std::vector<TCpuMatrix<AFloat>> & /*  */)
+{
+  std::cout<<"The size of the output matrix : "<<std::endl;
+  std::cout<<output.size()<<std::endl;
+  for(size_t i = 0; i < input.size(); i++){
+    for(size_t j = 0 ; j < input[i].GetNrows(); j++){
+      for(size_t k = 0; k < input[i].GetNcols(); k++){
+        std::cout<<j<<" "<<k<<std::endl;
+        std::cout<<input(j,k)<<std::endl;
+      }
+      std::cout<<std::endl;
+    }
+    std::cout<<std::endl;
+    TCpuMatrix<AFloat> inputTr = GenerateColumnarMatrix(input[i]);
+    TCpuMatrix<AFloat> convMatrix = GenerateConvMatrix(weights,output[i].GetNrows(),inputTr.GetNcols());
+  }
+  // output -> m x 1
+  // input -> Im2Col() columnar matrix n x 1
+  // weight -> a x b 
+
+   /*size_t height = calculateDimension(params.inputHeight, params.filterHeight, params.paddingHeight, params.strideRows);
+   size_t width = calculateDimension(params.inputWidth, params.filterWidth, params.paddingWidth, params.strideCols);
+   size_t nLocalViews = height * width;
+   size_t nLocalViewPixels = params.inputDepth * params.filterHeight * params.filterWidth;
+
+   R__ASSERT( input.size() > 0);
+   std::vector<int> forwardIndices(nLocalViews * nLocalViewPixels);
+   Im2colIndices(forwardIndices, input[0], nLocalViews, params.inputHeight, params.inputWidth, params.filterHeight,
+                 params.filterWidth, params.strideRows, params.strideCols, params.paddingHeight, params.paddingWidth);
+
+   //this should fix multi-thread inizializations of arrays
+   TCpuMatrix<AFloat>::InitializeOneVector(nLocalViews);
+   TCpuMatrix<AFloat>::InitializeOneVector(output[0].GetNcols());   // since it is used in AddCOnvBiases
+
+
+   auto f = [&] (UInt_t i)
+   {
+       // dropout not yet implemented for CNN
+       // if (applyDropout && (dropoutProbability != 1.0)) {
+       //    Dropout(input[i], dropoutProbability);
+       // }
+
+       TCpuMatrix<AFloat> inputTr(nLocalViews, nLocalViewPixels);
+       //inputTr.Zero();   // this is not thread safe
+
+       Im2colFast(inputTr, input[i], forwardIndices);
+
+       MultiplyTranspose(output[i], weights, inputTr);
+       AddConvBiases(output[i], biases);
+
+       evaluateDerivative<TCpu<AFloat>>(derivatives[i], activFunc, output[i]);
+       evaluate<TCpu<AFloat>>(output[i], activFunc);
+
+   };
+
+   TCpuMatrix<AFloat>::GetThreadExecutor().Foreach(f, ROOT::TSeqI(input.size()));*/
+}
+
 //____________________________________________________________________________
 template <typename AFloat>
 void TCpu<AFloat>::ConvLayerBackward(std::vector<TCpuMatrix<AFloat>> &activationGradientsBackward,

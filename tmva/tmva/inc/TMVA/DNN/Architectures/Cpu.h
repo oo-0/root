@@ -336,6 +336,21 @@ public:
    /** Dummy placeholder - preparation is currently only required for the CUDA architecture. */
    static void PrepareInternals(std::vector<TCpuMatrix<Scalar_t>> &) {}
 
+   /** Convert the weight matrix to convolution matrix */
+   static TCpuMatrix<Scalar_t> GenerateConvMatrix(TCpuMatrix<Scalar_t> weights, int rows, int cols);
+
+   /** Convert the input matrix to columnar matrix for transpose convolution*/
+   static TCpuMatrix<Scalar_t> GenerateColumnarMatrix(TCpuMatrix<Scalar_t> input);
+
+   /** Forward propagation in the Convolutional layer */
+   static void TransConvLayerForward(std::vector<TCpuMatrix<Scalar_t>> & output,
+                                std::vector<TCpuMatrix<Scalar_t>> & derivatives,
+                                const std::vector<TCpuMatrix<Scalar_t>> &input,
+                                const TCpuMatrix<Scalar_t> &weights, const TCpuMatrix<Scalar_t> & biases,
+                                const DNN::CNN::TConvParams & params, EActivationFunction activFunc,
+                                std::vector<TCpuMatrix<Scalar_t>> & /* inputPrime */);
+
+
    /** Forward propagation in the Convolutional layer */
    static void ConvLayerForward(std::vector<TCpuMatrix<Scalar_t>> & output,
                                 std::vector<TCpuMatrix<Scalar_t>> & derivatives,
