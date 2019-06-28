@@ -420,43 +420,12 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
       }
       std::cout<<std::endl;
     }
+    Multiply(output[i],convMatrix,inputTr);
+    AddConvBiases(output[i], biases);
   }
-  // output -> m x 1
-  // input -> Im2Col() columnar matrix n x 1
-  // weight -> a x b 
 
-   /*size_t height = calculateDimension(params.inputHeight, params.filterHeight, params.paddingHeight, params.strideRows);
-   size_t width = calculateDimension(params.inputWidth, params.filterWidth, params.paddingWidth, params.strideCols);
-   size_t nLocalViews = height * width;
-   size_t nLocalViewPixels = params.inputDepth * params.filterHeight * params.filterWidth;
-
-   R__ASSERT( input.size() > 0);
-   std::vector<int> forwardIndices(nLocalViews * nLocalViewPixels);
-   Im2colIndices(forwardIndices, input[0], nLocalViews, params.inputHeight, params.inputWidth, params.filterHeight,
-                 params.filterWidth, params.strideRows, params.strideCols, params.paddingHeight, params.paddingWidth);
-
-   //this should fix multi-thread inizializations of arrays
-   TCpuMatrix<AFloat>::InitializeOneVector(nLocalViews);
-   TCpuMatrix<AFloat>::InitializeOneVector(output[0].GetNcols());   // since it is used in AddCOnvBiases
-
-
-   auto f = [&] (UInt_t i)
-   {
-       // dropout not yet implemented for CNN
-       // if (applyDropout && (dropoutProbability != 1.0)) {
-       //    Dropout(input[i], dropoutProbability);
-       // }
-
-       TCpuMatrix<AFloat> inputTr(nLocalViews, nLocalViewPixels);
-       //inputTr.Zero();   // this is not thread safe
-
-       Im2colFast(inputTr, input[i], forwardIndices);
-
-       MultiplyTranspose(output[i], weights, inputTr);
-       AddConvBiases(output[i], biases);
-
-       evaluateDerivative<TCpu<AFloat>>(derivatives[i], activFunc, output[i]);
-       evaluate<TCpu<AFloat>>(output[i], activFunc);
+       //evaluateDerivative<TCpu<AFloat>>(derivatives[i], activFunc, output[i]);
+       //evaluate<TCpu<AFloat>>(output[i], activFunc);
 
    };
 
