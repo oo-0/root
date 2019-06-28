@@ -427,9 +427,9 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
        //evaluateDerivative<TCpu<AFloat>>(derivatives[i], activFunc, output[i]);
        //evaluate<TCpu<AFloat>>(output[i], activFunc);
 
-   };
+   //};
 
-   TCpuMatrix<AFloat>::GetThreadExecutor().Foreach(f, ROOT::TSeqI(input.size()));*/
+   //TCpuMatrix<AFloat>::GetThreadExecutor().Foreach(f, ROOT::TSeqI(input.size()));*/
 }
 
 //____________________________________________________________________________
