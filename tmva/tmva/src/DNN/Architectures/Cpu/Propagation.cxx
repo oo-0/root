@@ -399,14 +399,27 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
   for(size_t i = 0; i < input.size(); i++){
     for(size_t j = 0 ; j < input[i].GetNrows(); j++){
       for(size_t k = 0; k < input[i].GetNcols(); k++){
-        std::cout<<j<<" "<<k<<std::endl;
-        std::cout<<input(j,k)<<std::endl;
+        std::cout<<input[i](j,k)<<" ";
       }
       std::cout<<std::endl;
     }
     std::cout<<std::endl;
+    std::cout<<"Generating Columnar Matrix"<<std::endl;
     TCpuMatrix<AFloat> inputTr = GenerateColumnarMatrix(input[i]);
+    for(size_t j = 0 ; j < input[i].GetNrows(); j++){
+      for(size_t k = 0; k < input[i].GetNcols(); k++){
+        std::cout<<input[i](j,k)<<" ";
+      }
+      std::cout<<std::endl;
+    }
+    std::cout<<"Generating Conv Matrix"<<std::endl;
     TCpuMatrix<AFloat> convMatrix = GenerateConvMatrix(weights,output[i].GetNrows(),inputTr.GetNcols());
+    for(size_t j = 0 ; j < input[i].GetNrows(); j++){
+      for(size_t k = 0; k < input[i].GetNcols(); k++){
+        std::cout<<input[i](j,k)<<" ";
+      }
+      std::cout<<std::endl;
+    }
   }
   // output -> m x 1
   // input -> Im2Col() columnar matrix n x 1
