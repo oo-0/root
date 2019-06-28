@@ -406,17 +406,17 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
     std::cout<<std::endl;
     std::cout<<"Generating Columnar Matrix"<<std::endl;
     TCpuMatrix<AFloat> inputTr = GenerateColumnarMatrix(input[i]);
-    for(size_t j = 0 ; j < input[i].GetNrows(); j++){
-      for(size_t k = 0; k < input[i].GetNcols(); k++){
-        std::cout<<input[i](j,k)<<" ";
+    for(size_t j = 0 ; j < inputTr.GetNrows(); j++){
+      for(size_t k = 0; k < inputTr.GetNcols(); k++){
+        std::cout<<inputTr(j,k)<<" ";
       }
       std::cout<<std::endl;
     }
     std::cout<<"Generating Conv Matrix"<<std::endl;
     TCpuMatrix<AFloat> convMatrix = GenerateConvMatrix(weights,output[i].GetNrows(),inputTr.GetNcols());
-    for(size_t j = 0 ; j < input[i].GetNrows(); j++){
-      for(size_t k = 0; k < input[i].GetNcols(); k++){
-        std::cout<<input[i](j,k)<<" ";
+    for(size_t j = 0 ; j < convMatrix.GetNrows(); j++){
+      for(size_t k = 0; k < convMatrix.GetNcols(); k++){
+        std::cout<<convMatrix(j,k)<<" ";
       }
       std::cout<<std::endl;
     }
