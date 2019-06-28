@@ -377,10 +377,13 @@ TCpuMatrix<AFloat> TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights, 
 template <typename AFloat>
 TCpuMatrix<AFloat> TCpu<AFloat>::GenerateColumnarMatrix(TCpuMatrix<AFloat> input){
   TCpuMatrix<AFloat> inputColumnar(input.GetNrows()*input.GetNrows(),1);
+  std::cout<<input.GetNrows()*input.GetNcols()<<std::endl;
   for(size_t i = 0 ; i < input.GetNrows(); i++){
     for(size_t j = 0 ; j < input.GetNcols(); j++){
       inputColumnar(i*input.GetNrows()+j,1) = input(i,j);
+      std::cout<<inputColumnar(i*input.GetNrows()+j,1)<<" ";
     }
+    std::cout<<std::endl;
   }
   return inputColumnar;
 }
