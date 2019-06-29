@@ -409,6 +409,7 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
     std::cout<<std::endl;
     std::cout<<"Generating Columnar Matrix"<<std::endl;
     TCpuMatrix<AFloat> inputTr = GenerateColumnarMatrix(input[i]);
+    std::cout<<" Input Tr : "<<inputTr.GetNrows()<<" "<<inputTr.GetNcols()<<std::endl;
     for(size_t j = 0 ; j < inputTr.GetNrows(); j++){
       for(size_t k = 0; k < inputTr.GetNcols(); k++){
         std::cout<<inputTr(j,k)<<" ";
@@ -417,6 +418,7 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
     }
     std::cout<<"Generating Conv Matrix"<<std::endl;
     TCpuMatrix<AFloat> convMatrix = GenerateConvMatrix(weights,output[i].GetNrows(),inputTr.GetNcols());
+    std::cout<<"Convolution Matrix : "<<convMatrix.GetNrows()<<" "<<convMatrix.GetNcols()<<std::endl;
     for(size_t j = 0 ; j < convMatrix.GetNrows(); j++){
       for(size_t k = 0; k < convMatrix.GetNcols(); k++){
         std::cout<<convMatrix(j,k)<<" ";
@@ -427,10 +429,8 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
     AddConvBiases(output[i], biases);
   }
 
-       //evaluateDerivative<TCpu<AFloat>>(derivatives[i], activFunc, output[i]);
-       //evaluate<TCpu<AFloat>>(output[i], activFunc);
-
-   //};
+   //evaluateDerivative<TCpu<AFloat>>(derivatives[i], activFunc, output[i]);
+   //evaluate<TCpu<AFloat>>(output[i], activFunc);
 
    //TCpuMatrix<AFloat>::GetThreadExecutor().Foreach(f, ROOT::TSeqI(input.size()));*/
 }
