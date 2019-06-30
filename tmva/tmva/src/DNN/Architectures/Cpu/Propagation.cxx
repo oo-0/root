@@ -397,9 +397,18 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
                                     const DNN::CNN::TConvParams & params, EActivationFunction activFunc,
                                     std::vector<TCpuMatrix<AFloat>> & /*  */)
 {
-  std::cout<<"The size of the output matrix : "<<std::endl;
-  std::cout<<output.size()<<std::endl;
-  for(size_t i = 0; i < input.size(); i++){
+  std::cout<<"Dimensions : "<<input.size()<<std::endl;
+  for(size_t i = 0; i < output.size(); i++){
+    
+    std::cout<<"Expected Output Matrix : "<<std::endl;
+    for(size_t j = 0 ; j < output[i].GetNrows(); j++){
+      for(size_t k = 0; k < output[i].GetNcols(); k++){
+        std::cout<<output[i](j,k)<<" ";
+      }
+      std::cout<<std::endl;
+    }
+    
+    std::cout<<"Input Matrix : "<<std::endl;
     for(size_t j = 0 ; j < input[i].GetNrows(); j++){
       for(size_t k = 0; k < input[i].GetNcols(); k++){
         std::cout<<input[i](j,k)<<" ";
@@ -407,26 +416,54 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
       std::cout<<std::endl;
     }
     std::cout<<std::endl;
-    std::cout<<"Generating Columnar Matrix"<<std::endl;
+
     TCpuMatrix<AFloat> inputTr = GenerateColumnarMatrix(input[i]);
-    std::cout<<" Input Tr : "<<inputTr.GetNrows()<<" "<<inputTr.GetNcols()<<std::endl;
+    
+    std::cout<<"Generating Columnar Matrix"<<std::endl;
+    std::cout<<"Input Tr Dimensions : "<<inputTr.GetNrows()<<" "<<inputTr.GetNcols()<<std::endl;
+    std::cout<<"Input Transpose Matrix : "<<std::endl;
     for(size_t j = 0 ; j < inputTr.GetNrows(); j++){
       for(size_t k = 0; k < inputTr.GetNcols(); k++){
         std::cout<<inputTr(j,k)<<" ";
       }
       std::cout<<std::endl;
     }
-    std::cout<<"Generating Conv Matrix"<<std::endl;
+    std::cout<<std::endl;
+
     TCpuMatrix<AFloat> convMatrix = GenerateConvMatrix(weights,output[i].GetNrows(),inputTr.GetNcols());
-    std::cout<<"Convolution Matrix : "<<convMatrix.GetNrows()<<" "<<convMatrix.GetNcols()<<std::endl;
+    std::cout<<"Generating Conv Matrix"<<std::endl;
+    std::cout<<"Conv Matrix Dimensions : "<<convMatrix.GetNrows()<<" "<<convMatrix.GetNcols()<<std::endl;
+    std::cout<<"Convolution Matrix of Weights "<<std::endl;
     for(size_t j = 0 ; j < convMatrix.GetNrows(); j++){
       for(size_t k = 0; k < convMatrix.GetNcols(); k++){
         std::cout<<convMatrix(j,k)<<" ";
       }
       std::cout<<std::endl;
     }
+    std::cout<<std::endl;
+
+    std::cout<<"Multiplhying  convMatrix and inputTr"<<std::endl;
     Multiply(output[i],convMatrix,inputTr);
+
+    std::cout<<"Output Matrix : "<<std::endl;
+    for(size_t j = 0 ; j < output[i].GetNrows(); j++){
+      for(size_t k = 0; k < output[i].GetNcols(); k++){
+        std::cout<<output[i](j,k)<<" ";
+      }
+      std::cout<<std::endl;
+    }
+    std::cout<<std::endl;    
+    
+    std::cout<<"Adding Biases"<<std::endl;
     AddConvBiases(output[i], biases);
+    std::cout<<"Output Matrix : "<<std::endl;
+    for(size_t j = 0 ; j < output[i].GetNrows(); j++){
+      for(size_t k = 0; k < output[i].GetNcols(); k++){
+        std::cout<<output[i](j,k)<<" ";
+      }
+      std::cout<<std::endl;
+    }
+    std::cout<<std::endl;
   }
 
    //evaluateDerivative<TCpu<AFloat>>(derivatives[i], activFunc, output[i]);
