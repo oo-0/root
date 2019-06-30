@@ -432,7 +432,7 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
 
     std::cout<<"Generating Conv Matrix"<<std::endl;
     TCpuMatrix<AFloat> convMatrix = GenerateConvMatrix(weights,output[i].GetNrows(),inputTr.GetNcols());
-    std::cout<<"Passed parameters : "<<output[i].GetNrows<<" "<<output[i].GetNcols<<" "<<inputTr.GetNrows<<" "<<inputTr.GetNcols<<std::endl;
+    std::cout<<"Passed parameters : "<<output[i].GetNrows()<<" "<<output[i].GetNcols()<<" "<<inputTr.GetNrows()<<" "<<inputTr.GetNcols()<<std::endl;
     std::cout<<"Conv Matrix Dimensions : "<<convMatrix.GetNrows()<<" "<<convMatrix.GetNcols()<<std::endl;
     std::cout<<"Convolution Matrix of Weights "<<std::endl;
     for(size_t j = 0 ; j < convMatrix.GetNrows(); j++){
