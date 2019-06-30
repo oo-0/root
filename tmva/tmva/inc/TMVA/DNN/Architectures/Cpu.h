@@ -337,10 +337,10 @@ public:
    static void PrepareInternals(std::vector<TCpuMatrix<Scalar_t>> &) {}
 
    /** Convert the weight matrix to convolution matrix */
-   static void GenerateConvMatrix(TCpuMatrix<Scalar_t> weights, TCpuMatrix<Scalar_t> modifiedWeightMatrix);
+   static void GenerateConvMatrix(TCpuMatrix<Scalar_t> weights, TCpuMatrix<Scalar_t> & modifiedWeightMatrix);
 
    /** Convert the input matrix to columnar matrix for transpose convolution*/
-   static void GenerateColumnarMatrix(TCpuMatrix<Scalar_t> input,TCpuMatrix<Scalar_t> inputColumnar);
+   static void GenerateColumnarMatrix(TCpuMatrix<Scalar_t> input,TCpuMatrix<Scalar_t> & inputColumnar);
 
    /** Forward propagation in the Convolutional layer */
    static void TransConvLayerForward(std::vector<TCpuMatrix<Scalar_t>> & output,
