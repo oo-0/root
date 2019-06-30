@@ -137,8 +137,8 @@ bool testForward1()
        biasesMatrix(i, 0) = biases[i][0];
    }
 
-   size_t height = calculateDimension(imgHeight, fltHeight, zeroPaddingHeight, strideRows);
-   size_t width = calculateDimension(imgWidth, fltWidth, zeroPaddingWidth, strideCols);
+   size_t height = 4;//calculateDimension(imgHeight, fltHeight, zeroPaddingHeight, strideRows);
+   size_t width = 4;//calculateDimension(imgWidth, fltWidth, zeroPaddingWidth, strideCols);
 
    Matrix_t outputEvent(numberFilters, height * width);
 
@@ -151,7 +151,7 @@ bool testForward1()
    std::cout<<"Expected Output Matrix "<<std::endl;
    for (size_t i = 0; i < numberFilters; i++) {
       for (size_t j = 0; j < height * width; j++) {
-         std::cout<outputEvent(i,j)<<" ";
+         std::cout<<outputEvent(i,j)<<" ";
       }
       std::cout<<std::endl;
    }   
