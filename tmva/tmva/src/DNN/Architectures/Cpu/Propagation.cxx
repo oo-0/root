@@ -337,12 +337,14 @@ void TCpu<AFloat>::ConvLayerForward(std::vector<TCpuMatrix<AFloat>> & output,
 }
 
 template <typename AFloat>
-void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights, TCpuMatrix<AFloat> &modifiedWeightMatrix){
+void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights, std::vector<TCpuMatrix<AFloat>> &modifiedWeightMatrix){
   //TCpuMatrix<AFloat> modifiedWeightMatrix(rows,cols);
   size_t rows = modifiedWeightMatrix.GetNrows();
   size_t cols = modifiedWeightMatrix.GetNcols();
   TCpuMatrix<AFloat> columnarWeightMatrix(weights.GetNrows()*weights.GetNcols(),1);
-  GenerateColumnarMatrix(weights,columnarWeightMatrix);
+  std::vector< TCpuMatrix<AFloat>> columnarVector;
+  columnarVector.emplace_back(columnarWeightMatrix);
+  GenerateColumnarMatrix(weights,columnarVector);
   size_t padRow = 0;
   for(size_t i = 0 ; i < cols; i++){
     size_t j = 0;
@@ -353,10 +355,10 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights, TCpuMatrix<AFl
         j++;
       }
       
-      for(size_t k = 0 ; k < columnarWeightMatrix.GetNrows();k++){
+      for(size_t k = 0 ; k < columnarVector[0].GetNrows();k++){
         
         if(count<weights.GetNcols()){
-          modifiedWeightMatrix(j,i) = columnarWeightMatrix(k,1);  
+          modifiedWeightMatrix(j,i) = columnarVector[0](k,1);  
         }
         else{
           modifiedWeightMatrix(j,i) = 0;
@@ -378,12 +380,12 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights, TCpuMatrix<AFl
 }
 
 template <typename AFloat>
-void TCpu<AFloat>::GenerateColumnarMatrix(TCpuMatrix<AFloat> input,TCpuMatrix<AFloat> &inputColumnar){
+void TCpu<AFloat>::GenerateColumnarMatrix(TCpuMatrix<AFloat> input,std::vector<TCpuMatrix<AFloat>> & inputColumnar){
   //TCpuMatrix<AFloat> inputColumnar(input.GetNrows()*input.GetNrows(),1);
   std::cout<<input.GetNrows()*input.GetNcols()<<std::endl;
   for(size_t i = 0 ; i < input.GetNrows(); i++){
     for(size_t j = 0 ; j < input.GetNcols(); j++){
-      inputColumnar(i*input.GetNrows()+j,1) = input(i,j);
+      inputColumnar(j*input.GetNrows()+i,1) = input(i,j);
       std::cout<<inputColumnar(i*input.GetNrows()+j,1)<<" ";
     }
     std::cout<<std::endl;
@@ -421,7 +423,9 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
     std::cout<<std::endl;
 
     TCpuMatrix<AFloat> inputTr(input[i].GetNrows()*input[i].GetNcols(),1);
-    GenerateColumnarMatrix(input[i],inputTr);
+    std::vector< TCpuMatrix<AFloat>> inputTrVector;
+    inputTrVector.emplace_back(inputTr);
+    GenerateColumnarMatrix(input[i],inputTrVector);
     
     std::cout<<"Generating Columnar Matrix"<<std::endl;
     std::cout<<"Input Tr Dimensions : "<<inputTr.GetNrows()<<" "<<inputTr.GetNcols()<<std::endl;
@@ -435,21 +439,23 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
     std::cout<<std::endl;
 
     std::cout<<"Generating Conv Matrix"<<std::endl;
-    TCpuMatrix<AFloat> convMatrix(output[i].GetNrows(),inputTr.GetNcols());
-    GenerateConvMatrix(weights,convMatrix);
+    TCpuMatrix<AFloat> convMatrix(output[i].GetNcols(),inputTr.GetNrows());
+    std::vector< TCpuMatrix<AFloat>> convMatrices;
+    convMatrices.emplace_back(convMatrix);
+    GenerateConvMatrix(weights,convMatrices);
     std::cout<<"Passed parameters : "<<output[i].GetNrows()<<" "<<output[i].GetNcols()<<" "<<inputTr.GetNrows()<<" "<<inputTr.GetNcols()<<std::endl;
-    std::cout<<"Conv Matrix Dimensions : "<<convMatrix.GetNrows()<<" "<<convMatrix.GetNcols()<<std::endl;
+    std::cout<<"Conv Matrix Dimensions : "<<convMatrices[i].GetNrows()<<" "<<convMatrices[i].GetNcols()<<std::endl;
     std::cout<<"Convolution Matrix of Weights "<<std::endl;
-    for(size_t j = 0 ; j < convMatrix.GetNrows(); j++){
-      for(size_t k = 0; k < convMatrix.GetNcols(); k++){
-        std::cout<<convMatrix(j,k)<<" ";
+    for(size_t j = 0 ; j < convMatrices[i].GetNrows(); j++){
+      for(size_t k = 0; k < convMatrices[i].GetNcols(); k++){
+        std::cout<<convMatrices[i](j,k)<<" ";
       }
       std::cout<<std::endl;
     }
     std::cout<<std::endl;
 
     std::cout<<"Multiplying  convMatrix and inputTr"<<std::endl;
-    Multiply(output[i],convMatrix,inputTr);
+    Multiply(output[i],convMatrices[i],inputTr);
 
     std::cout<<"Output Matrix : "<<std::endl;
     for(size_t j = 0 ; j < output[i].GetNrows(); j++){
