@@ -147,21 +147,18 @@ bool testForward1()
          outputEvent(i, j) = expected[i][j];
       }
    }
+   
+   std::cout<<"Expected Output Matrix "<<std::endl;
+   for (size_t i = 0; i < numberFilters; i++) {
+      for (size_t j = 0; j < height * width; j++) {
+         std::cout<outputEvent(i,j)<<" ";
+      }
+      std::cout<<std::endl;
+   }   
+   std::cout<<std::endl;
+
    std::vector<Matrix_t> expectedOutput;
    expectedOutput.push_back(outputEvent);
-
-   std::cout<<"================================================================"<<std::endl;
-   std::cout<<"All Input data"<<std::endl;
-   std::cout<<"================================================================"<<std::endl;
-   std::cout<<"Input Matrix "<<std::endl;
-   for(size_t i = 0 ; i < input.size(); i++){
-      for(size_t j = 0; j < imgDepth; j++){
-        for(size_t k = 0 ; k < imgHeight*imgWidth; k++){
-          std::cout<<input[i](j,k)<<" ";
-        }
-        std::cout<<std::endl;
-      }
-    }
     std::cout<<std::endl;
     std::cout<<"Input image dimensions: "<<imgHeight<<" "<<imgWidth<<" "<<imgDepth<<std::endl;
     std::cout<<"Filter image dimensions: "<<fltHeight<<" "<<fltWidth<<" "<<numberFilters<<std::endl;
