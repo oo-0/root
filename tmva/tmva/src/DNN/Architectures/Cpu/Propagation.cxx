@@ -369,7 +369,7 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
         j++;
       }
       size_t weightIndex = 0;
-      for( ; weightIndex < columnarVector.GetNrows();){
+      for( ; weightIndex < columnarVector[0].GetNrows();){
         
         if(count%(weights.GetNcols()+1)!=0){
           modifiedWeightMatrix[0](j,i) = columnarVector[0](weightIndex,1);  
