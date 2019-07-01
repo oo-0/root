@@ -347,6 +347,11 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
   columnarVector.emplace_back(columnarWeightMatrix);
   GenerateColumnarMatrix(weights,columnarVector);
   size_t padRow = 0;
+  for(size_t l = 0; l < columnarVector[0].GetNrows();l++){
+    std::cout<<columnarVector[0](l,1)<<" ";
+  }
+  std::cout<<std::endl;
+  std::cout<<"Weight Matrix "<<weights.GetNrows()<<" "<<weights.GetNcols()<<std::endl;
   std::cout<<"Modified Weight Matrix "<<std::endl;
   for(size_t i = 0 ; i < cols; i++){
     for(size_t a = 0; a < rows; a++){
@@ -358,22 +363,23 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
     std::cout<<std::endl;
     size_t j = 0;
     while(j < rows){
-      size_t count = 0 ;
+      size_t count = 1;
       for(size_t k = 0; k < padRow; k++){
         modifiedWeightMatrix[0](k,i) = 0 ;
         j++;
       }
-      
-      for(size_t k = 0 ; k < columnarVector[0].GetNrows();k++){
+      size_t weightIndex = 0;
+      for( ; weightIndex < columnarVector.GetNrows();){
         
-        if(count<weights.GetNcols()){
-          modifiedWeightMatrix[0](j,i) = columnarVector[0](k,1);  
+        if(count%(weights.GetNcols()+1)!=0){
+          modifiedWeightMatrix[0](j,i) = columnarVector[0](weightIndex,1);  
+          weightIndex+=1;
         }
         else{
           modifiedWeightMatrix[0](j,i) = 0;
         }
         j++;
-        count = (count+1)%weights.GetNcols();
+        count +=1;
       }
       
       for(size_t k = j; k < rows; k++)
