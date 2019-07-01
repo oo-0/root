@@ -347,7 +347,15 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
   columnarVector.emplace_back(columnarWeightMatrix);
   GenerateColumnarMatrix(weights,columnarVector);
   size_t padRow = 0;
+  std::cout<<"Modified Weight Matrix "<<std::endl;
   for(size_t i = 0 ; i < cols; i++){
+    for(size_t a = 0; a < rows; a++){
+      for(size_t b = 0; b < cols; b++){
+        std::cout<<modifiedWeightMatrix[0](a,b)<<" ";
+      }
+      std::cout<<std::endl;
+    }
+    std::cout<<std::endl;
     size_t j = 0;
     while(j < rows){
       size_t count = 0 ;
@@ -387,6 +395,7 @@ void TCpu<AFloat>::GenerateColumnarMatrix(TCpuMatrix<AFloat> input,
   std::cout<<input.GetNrows()*input.GetNcols()<<std::endl;
   for(size_t i = 0 ; i < input.GetNrows(); i++){
     for(size_t j = 0 ; j < input.GetNcols(); j++){
+      std::cout<<"Indices "<<i<<" "<<j<<std::endl;
       inputColumnar[0](j*input.GetNrows()+i,1) = input(i,j);
       std::cout<<inputColumnar[0](i*input.GetNrows()+j,1)<<" ";
     }
