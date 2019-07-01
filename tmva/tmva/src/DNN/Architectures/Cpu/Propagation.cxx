@@ -392,13 +392,15 @@ template <typename AFloat>
 void TCpu<AFloat>::GenerateColumnarMatrix(TCpuMatrix<AFloat> input,
                                     std::vector< TCpuMatrix<AFloat> > & inputColumnar){
   //TCpuMatrix<AFloat> inputColumnar(input.GetNrows()*input.GetNrows(),1);
-  std::cout<<input.GetNrows()*input.GetNcols()<<std::endl;
+  std::cout<<"To columnar "<<input.GetNrows()<<" "<<input.GetNcols()<<std::endl;
   for(size_t i = 0 ; i < input.GetNrows(); i++){
     for(size_t j = 0 ; j < input.GetNcols(); j++){
       std::cout<<"Indices "<<i<<" "<<j<<std::endl;
       std::cout<<input(i,j)<<std::endl;
       std::cout<<"Input Columnar Indices "<<(i*input.GetNcols())<<"+"<<j<<", "<<0<<std::endl;
+      
       inputColumnar[0](i*input.GetNcols()+j,0) = input(i,j);
+      
       std::cout<<inputColumnar[0](i*input.GetNcols()+j,0)<<" ";
     }
     std::cout<<std::endl;
@@ -419,14 +421,15 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
   for(size_t i = 0; i < output.size(); i++){
     
     std::cout<<"Expected Output Matrix : "<<std::endl;
+    std::cout<<output[i].GetNrows()<<" "<<output[i].GetNrows()<<std::endl;
     for(size_t j = 0 ; j < output[i].GetNrows(); j++){
       for(size_t k = 0; k < output[i].GetNcols(); k++){
         std::cout<<output[i](j,k)<<" ";
       }
       std::cout<<std::endl;
     }
-    
     std::cout<<"Input Matrix : "<<std::endl;
+    std::cout<<input[i].GetNrows()<<" "<<input[i].GetNrows()<<std::endl;
     for(size_t j = 0 ; j < input[i].GetNrows(); j++){
       for(size_t k = 0; k < input[i].GetNcols(); k++){
         std::cout<<input[i](j,k)<<" ";
@@ -455,10 +458,10 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
     TCpuMatrix<AFloat> convMatrix(output[i].GetNcols(),inputTr.GetNrows());
     std::vector< TCpuMatrix<AFloat>> convMatrices;
     convMatrices.emplace_back(convMatrix);
-    GenerateConvMatrix(weights,convMatrices);
     std::cout<<"Passed parameters : "<<output[i].GetNrows()<<" "<<output[i].GetNcols()<<" "<<inputTr.GetNrows()<<" "<<inputTr.GetNcols()<<std::endl;
     std::cout<<"Conv Matrix Dimensions : "<<convMatrices[i].GetNrows()<<" "<<convMatrices[i].GetNcols()<<std::endl;
     std::cout<<"Convolution Matrix of Weights "<<std::endl;
+    GenerateConvMatrix(weights,convMatrices);
     for(size_t j = 0 ; j < convMatrices[i].GetNrows(); j++){
       for(size_t k = 0; k < convMatrices[i].GetNcols(); k++){
         std::cout<<convMatrices[i](j,k)<<" ";
