@@ -396,7 +396,8 @@ void TCpu<AFloat>::GenerateColumnarMatrix(TCpuMatrix<AFloat> input,
   for(size_t i = 0 ; i < input.GetNrows(); i++){
     for(size_t j = 0 ; j < input.GetNcols(); j++){
       std::cout<<"Indices "<<i<<" "<<j<<std::endl;
-      inputColumnar[0](j*input.GetNrows()+i,1) = input(i,j);
+      std::cout<<"Input Columnar Indices "<<(j*input.GetNrows())<<"+"<<i<<", "<<0<<std::endl;
+      inputColumnar[0](j*input.GetNrows()+i,0) = input(i,j);
       std::cout<<inputColumnar[0](i*input.GetNrows()+j,1)<<" ";
     }
     std::cout<<std::endl;
