@@ -340,8 +340,8 @@ template <typename AFloat>
 void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights, 
                                     std::vector< TCpuMatrix<AFloat> > & modifiedWeightMatrix){
   //TCpuMatrix<AFloat> modifiedWeightMatrix(rows,cols);
-  size_t rows = modifiedWeightMatrix.GetNrows();
-  size_t cols = modifiedWeightMatrix.GetNcols();
+  size_t rows = modifiedWeightMatrix[0].GetNrows();
+  size_t cols = modifiedWeightMatrix[0].GetNcols();
   TCpuMatrix<AFloat> columnarWeightMatrix(weights.GetNrows()*weights.GetNcols(),1);
   std::vector< TCpuMatrix<AFloat>> columnarVector;
   columnarVector.emplace_back(columnarWeightMatrix);
@@ -352,17 +352,17 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
     while(j < rows){
       size_t count = 0 ;
       for(size_t k = 0; k < padRow; k++){
-        modifiedWeightMatrix(k,i) = 0 ;
+        modifiedWeightMatrix[0](k,i) = 0 ;
         j++;
       }
       
       for(size_t k = 0 ; k < columnarVector[0].GetNrows();k++){
         
         if(count<weights.GetNcols()){
-          modifiedWeightMatrix(j,i) = columnarVector[0](k,1);  
+          modifiedWeightMatrix[0](j,i) = columnarVector[0](k,1);  
         }
         else{
-          modifiedWeightMatrix(j,i) = 0;
+          modifiedWeightMatrix[0](j,i) = 0;
         }
         j++;
         count = (count+1)%weights.GetNcols();
@@ -370,7 +370,7 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
       
       for(size_t k = j; k < rows; k++)
       {
-        modifiedWeightMatrix(j,i) = 0;
+        modifiedWeightMatrix[0](j,i) = 0;
         j++;
       }
       padRow++;
@@ -387,8 +387,8 @@ void TCpu<AFloat>::GenerateColumnarMatrix(TCpuMatrix<AFloat> input,
   std::cout<<input.GetNrows()*input.GetNcols()<<std::endl;
   for(size_t i = 0 ; i < input.GetNrows(); i++){
     for(size_t j = 0 ; j < input.GetNcols(); j++){
-      inputColumnar(j*input.GetNrows()+i,1) = input(i,j);
-      std::cout<<inputColumnar(i*input.GetNrows()+j,1)<<" ";
+      inputColumnar[0](j*input.GetNrows()+i,1) = input(i,j);
+      std::cout<<inputColumnar[0](i*input.GetNrows()+j,1)<<" ";
     }
     std::cout<<std::endl;
   }
