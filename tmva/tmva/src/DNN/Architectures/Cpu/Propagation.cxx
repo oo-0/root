@@ -397,7 +397,7 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
 template <typename AFloat>
 void MultiplyTranspose(TCpuMatrix<AFloat> &output,
                                const TCpuMatrix<AFloat> &input,
-                               const TCpuMatrix<Scalar_t> &weights){
+                               const TCpuMatrix<AFloat> &weights){
   size_t k = weights.GetNrows();
   size_t m = weights.GetNrows();
   size_t n = inputs.GetNcols();
