@@ -39,6 +39,11 @@ void TCpu<Real_t>::Multiply(TCpuMatrix<Real_t> &C,
     int k = (int) A.GetNcols();
     int n = (int) B.GetNcols();
 
+    std::cout<<"A : "<<A.GetNrows()<<" "<<A.GetNcols()<<std::endl;
+    std::cout<<"B : "<<B.GetNrows()<<" "<<B.GetNcols()<<std::endl;
+    std::cout<<"C : "<<C.GetNrows()<<" "<<C.GetNcols()<<std::endl;
+    std::cout<<"m , n , k are "<<m<<" "<<n<<" "<<k<<std::endl;
+
     R__ASSERT((int) C.GetNrows() == m);
     R__ASSERT((int) C.GetNcols() == n);
     R__ASSERT((int) B.GetNrows() == k); 

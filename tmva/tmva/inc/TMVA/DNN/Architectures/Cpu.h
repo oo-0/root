@@ -70,6 +70,9 @@ public:
    /** Add the vectors biases row-wise to the matrix output */
    static void AddRowWise(TCpuMatrix<Scalar_t> &output,
                           const TCpuMatrix<Scalar_t> &biases);
+   static void ConvMultiply(TCpuMatrix<Scalar_t> &output,
+                                 const TCpuMatrix<Scalar_t> &input,
+                                 const TCpuMatrix<Scalar_t> &weights);
    ///@}
 
    /** @name Backward Propagation

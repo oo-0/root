@@ -395,6 +395,13 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
 }
 
 template <typename AFloat>
+void MultiplyTranspose(TCpuMatrix<Scalar_t> &output,
+                               const TCpuMatrix<Scalar_t> &input,
+                               const TCpuMatrix<Scalar_t> &weights){
+  size_t m = input.GetNrows();
+
+}
+template <typename AFloat>
 void TCpu<AFloat>::GenerateColumnarMatrix(TCpuMatrix<AFloat> input,
                                     std::vector< TCpuMatrix<AFloat> > & inputColumnar){
   //TCpuMatrix<AFloat> inputColumnar(input.GetNrows()*input.GetNrows(),1);
@@ -426,13 +433,14 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
   std::cout<<"Dimensions : "<<input.size()<<std::endl;
   for(size_t i = 0; i < output.size(); i++){
 
-    TCpuMatrix<AFloat> outputTr(output[i].GetNcols(),output[i].GetNrows());
+    TCpuMatrix<AFloat> outputTr(output[i].GetNcols(),output[i].GetNrows())
 
     std::cout<<"Expected Output Matrix : "<<std::endl;
     std::cout<<output[i].GetNrows()<<" "<<output[i].GetNrows()<<std::endl;
     for(size_t j = 0 ; j < output[i].GetNrows(); j++){
       for(size_t k = 0; k < output[i].GetNcols(); k++){
         std::cout<<output[i](j,k)<<" ";
+        outputTr(k,j) = 0;
       }
       std::cout<<std::endl;
     }
@@ -466,10 +474,13 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
     TCpuMatrix<AFloat> convMatrix(output[i].GetNcols(),inputTr.GetNrows());
     std::vector< TCpuMatrix<AFloat>> convMatrices;
     convMatrices.emplace_back(convMatrix);
+    
     std::cout<<"Passed parameters : "<<output[i].GetNrows()<<" "<<output[i].GetNcols()<<" "<<inputTr.GetNrows()<<" "<<inputTr.GetNcols()<<std::endl;
     std::cout<<"Conv Matrix Dimensions : "<<convMatrices[i].GetNrows()<<" "<<convMatrices[i].GetNcols()<<std::endl;
     std::cout<<"Convolution Matrix of Weights "<<std::endl;
+    
     GenerateConvMatrix(weights,convMatrices);
+    
     for(size_t j = 0 ; j < convMatrices[i].GetNrows(); j++){
       for(size_t k = 0; k < convMatrices[i].GetNcols(); k++){
         std::cout<<convMatrices[i](j,k)<<" ";
@@ -483,7 +494,7 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
     std::cout<<"Weights "<<convMatrices[i].GetNrows()<<" "<<convMatrices[i].GetNcols()<<std::endl;
     std::cout<<"Input Tr "<<inputTr.GetNrows()<<" "<<inputTr.GetNcols()<<std::endl;
 
-    Multiply(outputTr,inputTr,convMatrices[i]);
+    ConvMultiply(outputTr,inputTr,convMatrices[i]);
 
     for(size_t j = 0 ; j < output[i].GetNrows(); j++){
       for(size_t k = 0; k < output[i].GetNcols(); k++){
