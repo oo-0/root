@@ -395,12 +395,34 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
 }
 
 template <typename AFloat>
-void MultiplyTranspose(TCpuMatrix<Scalar_t> &output,
-                               const TCpuMatrix<Scalar_t> &input,
+void MultiplyTranspose(TCpuMatrix<AFloat> &output,
+                               const TCpuMatrix<AFloat> &input,
                                const TCpuMatrix<Scalar_t> &weights){
-  size_t m = input.GetNrows();
+  size_t k = weights.GetNrows();
+  size_t m = weights.GetNrows();
+  size_t n = inputs.GetNcols();
+
+  std::cout<<k<<" "<<m<<" "<<n<<std::endl;
+  std::cout<<output.GetNrows()<<" "<<output.GetNcols()<<std::endl;
+  std::cout<<input.GetNrows()<<" "<<input.GetNcols()<<std::endl;
+  std::cout<<weights.GetNrows()<<" "<<weights.GetNcols()<<std::endl;
+
+  for(size_t i = 0 ; i < m; i++){
+    for(size_t j = 0 ; j < n; j++){
+      output(i,j) = 0;
+    }
+  }
+
+  for(size_t i = 0 ; i < m; i++){
+    for(size_t j = 0 ; j < n; j++){
+      for(size_t l = 0; l < k; l++){
+        output(i,j) += weights(i,l)*input(l,j);
+      }
+    }
+  }
 
 }
+
 template <typename AFloat>
 void TCpu<AFloat>::GenerateColumnarMatrix(TCpuMatrix<AFloat> input,
                                     std::vector< TCpuMatrix<AFloat> > & inputColumnar){
@@ -494,7 +516,7 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
     std::cout<<"Weights "<<convMatrices[i].GetNrows()<<" "<<convMatrices[i].GetNcols()<<std::endl;
     std::cout<<"Input Tr "<<inputTr.GetNrows()<<" "<<inputTr.GetNcols()<<std::endl;
 
-    ConvMultiply(outputTr,inputTr,convMatrices[i]);
+    Multiply(outputTr,inputTr,convMatrices[i]);
 
     for(size_t j = 0 ; j < output[i].GetNrows(); j++){
       for(size_t k = 0; k < output[i].GetNcols(); k++){
