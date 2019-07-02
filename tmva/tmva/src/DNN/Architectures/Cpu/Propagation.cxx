@@ -400,7 +400,7 @@ void MultiplyTranspose(TCpuMatrix<AFloat> &output,
                                const TCpuMatrix<AFloat> &weights){
   size_t k = weights.GetNrows();
   size_t m = weights.GetNrows();
-  size_t n = inputs.GetNcols();
+  size_t n = input.GetNcols();
 
   std::cout<<k<<" "<<m<<" "<<n<<std::endl;
   std::cout<<output.GetNrows()<<" "<<output.GetNcols()<<std::endl;
@@ -455,7 +455,7 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
   std::cout<<"Dimensions : "<<input.size()<<std::endl;
   for(size_t i = 0; i < output.size(); i++){
 
-    TCpuMatrix<AFloat> outputTr(output[i].GetNcols(),output[i].GetNrows())
+    TCpuMatrix<AFloat> outputTr(output[i].GetNcols(),output[i].GetNrows());
 
     std::cout<<"Expected Output Matrix : "<<std::endl;
     std::cout<<output[i].GetNrows()<<" "<<output[i].GetNrows()<<std::endl;
