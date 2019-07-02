@@ -389,12 +389,14 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
         j++;
       }
     } 
-    if(i >= (cols/2)){
-      padRow =  (rows - 1 - columnarVector[0].GetNrows() - (weights.GetNcols() - 1)) - (cols - 1 - i);
+    std::cout<<"Padding "<<padrow<<" -> ";
+    if(i > (cols/2)){
+      padRow =  (rows - 1 - columnarVector[0].GetNrows() - (weights.GetNrows() - 1)) - (cols - 1 - i);
     }
     else{
       padRow = i ;
     }
+    std::cout<<padrow<<std::endl;
   }
   //return modifiedWeightMatrix;
 }
