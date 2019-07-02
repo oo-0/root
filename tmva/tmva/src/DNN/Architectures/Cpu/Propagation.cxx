@@ -343,7 +343,7 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
   size_t rows = modifiedWeightMatrix[0].GetNrows();
   size_t cols = modifiedWeightMatrix[0].GetNcols();
   TCpuMatrix<AFloat> columnarWeightMatrix(weights.GetNrows()*weights.GetNcols(),1);
-  //std::vector< TCpuMatrix<AFloat> > columnarVector;
+  std::vector< TCpuMatrix<AFloat> > columnarVector;
   columnarVector.emplace_back(columnarWeightMatrix);
   GenerateColumnarMatrix(weights,columnarVector);
   size_t padRow = 0;
