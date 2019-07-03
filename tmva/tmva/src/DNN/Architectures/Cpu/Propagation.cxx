@@ -541,7 +541,7 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
 
     for(size_t j = 0 ; j < output[i].GetNrows(); j++){
       for(size_t k = 0; k < output[i].GetNcols(); k++){
-        output[i](j,k) = outputTr(j*output.GetNcols()+k,0);
+        output[i](j,k) = outputTr(j*output[i].GetNcols()+k,0);
       }
     }
 
