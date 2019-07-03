@@ -469,14 +469,21 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
   std::cout<<"Dimensions : "<<input.size()<<std::endl;
   for(size_t i = 0; i < output.size(); i++){
 
-    TCpuMatrix<AFloat> outputTr(output[i].GetNcols(),output[i].GetNrows());
+    TCpuMatrix<AFloat> outputTr(output[i].GetNcols()*output[i].GetNcols(),1);
+    
+    std::cout<<"Output Columnar Matrix "<<std::endl;
+    for(size_t j = 0 ; j < outputTr.GetNrows(); j++){
+      for(size_t k = 0; k < outputTr.GetNcols(); k++){
+        std::cout<<outputTr(j,k)<<" ";
+      }
+      std::cout<<std::endl;
+    }
 
     std::cout<<"Expected Output Matrix : "<<std::endl;
     std::cout<<output[i].GetNrows()<<" "<<output[i].GetNrows()<<std::endl;
     for(size_t j = 0 ; j < output[i].GetNrows(); j++){
       for(size_t k = 0; k < output[i].GetNcols(); k++){
         std::cout<<output[i](j,k)<<" ";
-        outputTr(k,j) = 0;
       }
       std::cout<<std::endl;
     }
@@ -534,7 +541,7 @@ void TCpu<AFloat>::TransConvLayerForward(std::vector<TCpuMatrix<AFloat>> & outpu
 
     for(size_t j = 0 ; j < output[i].GetNrows(); j++){
       for(size_t k = 0; k < output[i].GetNcols(); k++){
-        output[i](j,k) = outputTr(k,j);
+        output[i](j,k) = outputTr(j*output.GetNcols()+k,0);
       }
     }
 
