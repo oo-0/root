@@ -392,7 +392,11 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
     i++;
     std::cout<<"Padding "<<padRow<<" -> ";
     if(i >= (cols/2)){
-      padRow =  (rows - 1 - columnarVector[0].GetNrows() - (weights.GetNrows() - 1)) - (cols - 1 - i);
+      int newPadRow =  (rows - 1 - columnarVector[0].GetNrows() - (weights.GetNrows() - 1)) - (cols - 1 - i);
+      if(newPadRow<0){
+        newPadRow = 0;
+      }
+      padRow = newPadRow;
     }
     else{
       padRow = i ;
