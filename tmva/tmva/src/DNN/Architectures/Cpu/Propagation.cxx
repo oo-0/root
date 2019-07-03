@@ -369,7 +369,7 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
         j++;
       }
       size_t weightIndex = 0;
-      for( ; weightIndex < columnarVector[0].GetNrows();){
+      for( ; weightIndex < columnarVector[0].GetNrows() and j<rows;){
         
         std::cout<<"( "<<j<<", "<<i<<" ), count = "<<count<<" , wI = "<<weightIndex<<std::endl;
         std::cout<<"Accessing modifiedWeightMatrix( "<<j<<", "<<i<<" ) and columnarVector( "<<weightIndex<<", "<<0<<" )"<<std::endl;
