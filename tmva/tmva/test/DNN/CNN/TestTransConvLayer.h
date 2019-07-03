@@ -77,6 +77,12 @@ bool testForward1()
       6, 29, 30, 7,
       10, 29, 33, 13,
       12, 24, 16, 4
+    },
+    {
+      1, 9 , 9 , 9,
+      8 , 8 , 8 , 8,
+       7 , 7 , 7 , 7,
+       1, 2, 3 , 4
     }
 
    };
@@ -87,6 +93,11 @@ bool testForward1()
       1, 4, 1, 
       1, 4, 3,
       3, 3, 1
+    },
+    {
+      1, 2, 3, 
+      4, 5, 7, 
+      8, 9, 0
     }
 
    };
@@ -103,14 +114,17 @@ bool testForward1()
 
       {
         2, 1, 4, 4
+      },
+      {
+        8 , 0, 7 , 1
       }
 
     };
    
-   size_t imgDepth = 1;
+   size_t imgDepth = 2;
    size_t imgHeight = 2;
    size_t imgWidth = 2;
-   size_t numberFilters = 1;
+   size_t numberFilters = 2;
    size_t fltHeight = 3;
    size_t fltWidth = 3;
    size_t strideRows = 1;
