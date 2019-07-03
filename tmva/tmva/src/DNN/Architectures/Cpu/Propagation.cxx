@@ -394,7 +394,7 @@ void TCpu<AFloat>::GenerateConvMatrix(TCpuMatrix<AFloat> weights,
       padRow =  (rows - 1 - columnarVector[0].GetNrows() - (weights.GetNrows() - 1)) - (cols - 1 - i);
     }
     else{
-      padRow = i ;
+      padRow = i+1 ;
     }
     std::cout<<padRow<<std::endl;
   }
