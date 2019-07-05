@@ -106,10 +106,10 @@ bool testForward1()
       }
     };
    
-   size_t imgDepth = 2;
+   size_t imgDepth = 1;
    size_t imgHeight = 2;
    size_t imgWidth = 2;
-   size_t numberFilters = 2;
+   size_t numberFilters = 1;
    size_t fltHeight = 3;
    size_t fltWidth = 3;
    size_t strideRows = 1;
