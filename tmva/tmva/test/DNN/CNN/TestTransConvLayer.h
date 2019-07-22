@@ -220,7 +220,7 @@ bool testBackward1()
    double expected[][4] = {
 
       {
-        2, 1, 4, 4
+        312, 335, 500, 487
       }
     };
    
