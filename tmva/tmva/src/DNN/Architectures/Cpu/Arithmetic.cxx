@@ -60,6 +60,15 @@ void TCpu<Real_t>::Multiply(TCpuMatrix<Real_t> &C,
 
     ::TMVA::DNN::Blas::Gemm(&transa, &transb, &m, &n, &k, &alpha,
                             APointer, &m, BPointer, &k, &beta, CPointer, &m);
+
+    std::cout<<"Resultant Matrix "<<std::endl;
+    for(size_t i = 0 ; i < m; i++){
+      for(size_t j = 0 ; j < n; j++){
+        std::cout<<C(i,j)<<" ";
+      }
+      std::cout<<std::endl;
+    }
+
 }
 
 //____________________________________________________________________________

@@ -342,6 +342,9 @@ public:
    /** Convert the weight matrix to convolution matrix */
    static void GenerateConvMatrix(TCpuMatrix<Scalar_t> weights, std::vector<TCpuMatrix<Scalar_t> > & modifiedWeightMatrix);
 
+   /** Convert the weight matrix to convolution matrix */
+   static void GenerateTransConvMatrix(TCpuMatrix<Scalar_t> weights, std::vector<TCpuMatrix<Scalar_t> > & modifiedWeightMatrix);
+
    /** Convert the input matrix to columnar matrix for transpose convolution*/
    static void GenerateColumnarMatrix(TCpuMatrix<Scalar_t> input,std::vector<TCpuMatrix<Scalar_t> > & inputColumnar);
 
@@ -353,6 +356,13 @@ public:
                                 const DNN::CNN::TConvParams & params, EActivationFunction activFunc,
                                 std::vector<TCpuMatrix<Scalar_t>> & /* inputPrime */);
 
+   /** Forward propagation in the Convolutional layer */
+   static void TransConvLayerBackward(std::vector<TCpuMatrix<Scalar_t>> & output,
+                                std::vector<TCpuMatrix<Scalar_t>> & derivatives,
+                                const std::vector<TCpuMatrix<Scalar_t>> &input,
+                                const TCpuMatrix<Scalar_t> &weights, const TCpuMatrix<Scalar_t> & biases,
+                                const DNN::CNN::TConvParams & params, EActivationFunction activFunc,
+                                std::vector<TCpuMatrix<Scalar_t>> & /* inputPrime */);
 
    /** Forward propagation in the Convolutional layer */
    static void ConvLayerForward(std::vector<TCpuMatrix<Scalar_t>> & output,

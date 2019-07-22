@@ -174,3 +174,121 @@ bool testForward1()
 
    return status;
 }
+
+/*************************************************************************
+ * Test 1: Forward Propagation
+ *  batch size = 1
+ *  image depth = 1, image height = 2, image width = 2,
+ *  num frames = 1, filter height = 3, filter width = 3,
+ *  stride rows = 1, stride cols = 1,
+ *  zero-padding height = 0, zero-padding width = 0,
+ *************************************************************************/
+template<typename Architecture>
+bool testBackward1()
+{
+   using Matrix_t = typename Architecture::Matrix_t;
+
+   double img[][16] = {
+
+    {
+      2, 9, 6, 3, 
+      9, 14, 29, 29,
+      13, 21, 28, 24,
+      24, 16, 4, 0
+    }
+
+   };
+
+   double weights[][9] = {
+
+    {
+      1, 4, 1, 
+      1, 4, 3,
+      3, 3, 1
+    }
+
+   };
+
+   double biases[][1] = {
+
+      {
+        0
+      }
+
+   };
+
+   double expected[][4] = {
+
+      {
+        2, 1, 4, 4
+      }
+    };
+   
+   size_t imgDepth = 1;
+   size_t imgHeight = 4;
+   size_t imgWidth = 4;
+   size_t numberFilters = 1;
+   size_t fltHeight = 3;
+   size_t fltWidth = 3;
+   size_t strideRows = 1;
+   size_t strideCols = 1;
+   size_t zeroPaddingHeight = 0;
+   size_t zeroPaddingWidth = 0;
+
+   Matrix_t inputEvent(imgDepth, imgHeight * imgWidth);
+
+   for (size_t i = 0; i < imgDepth; i++) {
+      for (size_t j = 0; j < imgHeight * imgWidth; j++) {
+         inputEvent(i, j) = img[i][j];
+      }
+   }
+   std::vector<Matrix_t> input;
+   input.push_back(inputEvent);
+
+   Matrix_t weightsMatrix(numberFilters, fltHeight * fltWidth * imgDepth);
+   Matrix_t biasesMatrix(numberFilters, 1);
+   for (size_t i = 0; i < numberFilters; i++) {
+       for (size_t j = 0; j < fltHeight * fltWidth * imgDepth; j++){
+           weightsMatrix(i, j) = weights[i][j];
+       }
+       biasesMatrix(i, 0) = biases[i][0];
+   }
+
+   size_t height = 2;//calculateDimension(imgHeight, fltHeight, zeroPaddingHeight, strideRows);
+   size_t width = 2;//calculateDimension(imgWidth, fltWidth, zeroPaddingWidth, strideCols);
+
+   Matrix_t outputEvent(numberFilters, height * width);
+
+   for (size_t i = 0; i < numberFilters; i++) {
+      for (size_t j = 0; j < height * width; j++) {
+         outputEvent(i, j) = expected[i][j];
+      }
+   }
+   
+   std::cout<<"Expected Output Matrix "<<std::endl;
+   for (size_t i = 0; i < numberFilters; i++) {
+      for (size_t j = 0; j < height * width; j++) {
+         std::cout<<outputEvent(i,j)<<" ";
+      }
+      std::cout<<std::endl;
+   }   
+   std::cout<<std::endl;
+
+   std::vector<Matrix_t> expectedOutput;
+   expectedOutput.push_back(outputEvent);
+    std::cout<<std::endl;
+    std::cout<<"Input image dimensions: "<<imgHeight<<" "<<imgWidth<<" "<<imgDepth<<std::endl;
+    std::cout<<"Filter image dimensions: "<<fltHeight<<" "<<fltWidth<<" "<<numberFilters<<std::endl;
+    std::cout<<"Stride "<<strideRows<<" "<<strideCols<<std::endl;
+    std::cout<<"Padding "<<zeroPaddingHeight<<" "<<zeroPaddingWidth<<std::endl;
+
+
+   std::cout<<"================================================================"<<std::endl;
+
+
+   bool status = testTransConvLayerBackward<Architecture>(input, expectedOutput, weightsMatrix, biasesMatrix, imgHeight,
+                                                    imgWidth, imgDepth, fltHeight, fltWidth, numberFilters, strideRows,
+                                                    strideCols, zeroPaddingHeight, zeroPaddingWidth);
+
+   return status;
+}
